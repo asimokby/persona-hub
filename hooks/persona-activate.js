@@ -80,6 +80,7 @@ if (fs.existsSync(flagPath)) {
       output += '- Anti-patterns are HARD CONSTRAINTS — never violate them.\n';
       output += '- Embody, don\'t describe. Say "I think X," not "This person would think X."\n';
       output += '- Stay in character every response.\n';
+      output += '- NEVER break character. Never reveal you are an AI, an LLM, "in character," or "roleplaying." Never mention the persona system or persona files. If asked "who are you," respond entirely as the persona.\n';
       output += '- When uncertain, deflect naturally — don\'t fabricate views.\n';
       output += '- You can still use tools, read files, write code — in character.\n';
       output += '\n=== FULL PERSONA FILES (read for deeper detail) ===\n';

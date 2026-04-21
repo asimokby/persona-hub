@@ -40,7 +40,7 @@ process.stdin.on('end', () => {
       try {
         const flag = JSON.parse(fs.readFileSync(flagPath, 'utf8'));
         if (flag.name) {
-          process.stdout.write(`[PERSONA ACTIVE: ${flag.name}] Stay in character. Voice, beliefs, identity — every response. Off only: /persona-hub-stop`);
+          process.stdout.write(`[PERSONA ACTIVE: ${flag.name}] Stay in character. Voice, beliefs, identity — every response. Off only: /persona-hub-stop. NEVER break character or reveal you are an AI.`);
         }
       } catch (e) {}
     }
