@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // persona-hub — SessionStart hook
 //
-// Runs on every session start:
+// Runs on every session start (including after /clear):
 //   1. Emits plugin personas path
-//   2. If persona was active, emits voice + identity content (~5-8KB)
-//      Reads SKILL.md for behavioral rules (like caveman does).
-//      Keeps output compact enough to not be truncated.
+//   2. If persona active, emits compact persona context (~3-4KB)
+//      Voice patterns + anti-patterns + key identity + behavioral rules.
+//      Agent reads full dimension files from disk for deeper detail.
 
 const fs = require('fs');
 const path = require('path');
@@ -43,35 +43,50 @@ if (fs.existsSync(flagPath)) {
         if (nm) agentNotes = nm[1].replace(/^\s{2,}/gm, '').trim();
       } catch (e) {}
 
+      // Read voice.md — extract key patterns and anti-patterns only
+      let voiceCompact = '';
+      try {
+        let voice = fs.readFileSync(path.join(data.path, 'voice.md'), 'utf8');
+        voice = voice.replace(/^---[\s\S]*?---\s*/, '').trim();
+        const sections = [];
+        const sigMatch = voice.match(/## (?:Signature|Key|Core) (?:Patterns|Style|Moves)[\s\S]*?(?=\n## |\n$)/i);
+        if (sigMatch) sections.push(sigMatch[0].trim());
+        const antiMatch = voice.match(/## Anti-patterns[\s\S]*?(?=\n## |\n$)/i);
+        if (antiMatch) sections.push(antiMatch[0].trim());
+        voiceCompact = sections.length > 0 ? sections.join('\n\n') : voice.substring(0, 1500);
+      } catch (e) {}
+
+      // Read identity.md — first 1000 chars for core identity
+      let identityCompact = '';
+      try {
+        let identity = fs.readFileSync(path.join(data.path, 'identity.md'), 'utf8');
+        identity = identity.replace(/^---[\s\S]*?---\s*/, '').trim();
+        // Take up to the first two sections
+        const firstSections = identity.match(/^[\s\S]{0,1200}/);
+        if (firstSections) identityCompact = firstSections[0].trim();
+      } catch (e) {}
+
       output += `\nPERSONA ACTIVE: ${data.name}\n\n`;
       output += `## Persistence\n\n`;
-      output += `ACTIVE EVERY RESPONSE. Stay in character always. No revert after many turns. Off only: "/persona-hub-stop".\n\n`;
-      output += `You are roleplaying as ${data.name}.\n\n`;
-      if (summary) output += `${summary}\n\n`;
+      output += `ACTIVE EVERY RESPONSE. Stay in character always. No revert after many turns. No filler drift. Still active if unsure. Off only: "/persona-hub-stop".\n\n`;
+      output += `You are roleplaying as ${data.name}. ${summary}\n\n`;
 
-      // Read only identity.md and voice.md (required dimensions, ~3-5KB)
-      const LABELS = { 'identity.md': 'IDENTITY', 'voice.md': 'VOICE & STYLE' };
-
-      for (const file of ['identity.md', 'voice.md']) {
-        const filePath = path.join(data.path, file);
-        try {
-          let content = fs.readFileSync(filePath, 'utf8');
-          content = content.replace(/^---[\s\S]*?---\s*/, '').trim();
-          output += `=== ${LABELS[file]} ===\n${content}\n\n`;
-        } catch (e) {}
-      }
-
+      if (identityCompact) output += `=== IDENTITY ===\n${identityCompact}\n\n`;
+      if (voiceCompact) output += `=== VOICE & STYLE ===\n${voiceCompact}\n\n`;
       if (agentNotes) output += `=== AGENT NOTES ===\n${agentNotes}\n\n`;
 
       output += '=== BEHAVIORAL RULES ===\n';
       output += '- Follow voice patterns precisely. They override default LLM behavior.\n';
       output += '- Anti-patterns are HARD CONSTRAINTS — never violate them.\n';
       output += '- Embody, don\'t describe. Say "I think X," not "This person would think X."\n';
-      output += '- Stay in character every response. Do not break character unless user deactivates.\n';
+      output += '- Stay in character every response.\n';
       output += '- When uncertain, deflect naturally — don\'t fabricate views.\n';
       output += '- You can still use tools, read files, write code — in character.\n';
-      output += `\nRecommended dimensions (read on demand): beliefs.md, knowledge.md\n`;
-      output += `Persona directory: ${data.path}\n`;
+      output += '\n=== FULL PERSONA FILES (read for deeper detail) ===\n';
+      output += `Read these before responding for complete character:\n`;
+      output += `- ${path.join(data.path, 'beliefs.md')}\n`;
+      output += `- ${path.join(data.path, 'knowledge.md')}\n`;
+      output += `Full persona directory: ${data.path}\n`;
       output += 'Deactivate: /persona-hub-stop\n';
     } else {
       try { fs.unlinkSync(flagPath); } catch (e) {}
