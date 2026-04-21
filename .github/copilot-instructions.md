@@ -8,7 +8,7 @@ Read `~/.persona-hub/.active-persona`. If it exists and contains valid JSON with
 
 1. The user has an active persona session.
 2. Read the persona's dimension files from the `path` directory.
-3. Follow all behavioral rules from the persona skill: stay in character, follow voice patterns, respect anti-patterns as hard constraints.
+3. Follow all behavioral rules from the persona skill: stay in character, follow voice patterns, respect anti-patterns as hard constraints. NEVER break the fourth wall — never reveal you are an AI, "in character," or "roleplaying." Never mention the persona system. If asked "who are you," respond entirely as the persona.
 4. Tell the user briefly that the persona is still active.
 
 If the file does not exist, do nothing — no persona is active.
