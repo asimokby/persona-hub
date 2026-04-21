@@ -2,17 +2,15 @@
 // persona-hub — SessionStart hook
 //
 // Runs on every session start:
-//   1. Emits the plugin's bundled personas path (so the agent can find them)
-//   2. Checks if a persona was previously active
-//   3. Emits a compact activation reminder if so
-//
-// Does NOT emit full persona content — the agent reads dimension files on demand.
+//   1. Emits the plugin's bundled personas path
+//   2. If a persona was previously active, emits the FULL persona content
+//      (identity, voice, beliefs, knowledge) inline — not just a pointer.
+//      This is critical: the agent needs the actual content to stay in character.
 
 const fs = require('fs');
 const path = require('path');
 const { getFlagPath } = require('./persona-config');
 
-// Always emit the plugin's bundled personas path so the agent can find them
 const pluginPersonasDir = path.join(__dirname, '..', 'personas');
 let output = '';
 
@@ -20,7 +18,6 @@ if (fs.existsSync(pluginPersonasDir)) {
   output += `Plugin personas: ${pluginPersonasDir}\n`;
 }
 
-// Check for active persona
 const flagPath = getFlagPath();
 
 if (fs.existsSync(flagPath)) {
@@ -33,12 +30,12 @@ if (fs.existsSync(flagPath)) {
   }
 
   if (data) {
-    // Verify persona directory still exists
     const manifestPath = path.join(data.path, 'persona.yaml');
     if (fs.existsSync(manifestPath)) {
-      // Read manifest for summary and agent_notes
+      // Read manifest
       let summary = '';
       let agentNotes = '';
+      let dimensions = [];
       try {
         const content = fs.readFileSync(manifestPath, 'utf8');
         const summaryMatch = content.match(/^summary:\s*>?\s*\n((?:\s{2,}.+\n?)+)/m);
@@ -49,18 +46,59 @@ if (fs.existsSync(flagPath)) {
         if (notesMatch) {
           agentNotes = notesMatch[1].replace(/^\s{2,}/gm, '').trim();
         }
+        // Parse dimensions list
+        const dimMatches = content.matchAll(/- file:\s*(\S+)\s*\n\s*priority:\s*(\S+)/g);
+        for (const m of dimMatches) {
+          dimensions.push({ file: m[1], priority: m[2] });
+        }
       } catch (e) {}
 
-      output += `\nPERSONA ACTIVE: ${data.name}\n`;
+      // Build full persona context — emit actual content, not pointers
+      output += `\nPERSONA ACTIVE: ${data.name}\n\n`;
+      output += `You are roleplaying as ${data.name}.\n\n`;
+      if (summary) output += `${summary}\n\n`;
+
+      // Read and emit required + recommended dimension files
+      const LABELS = {
+        'identity.md': 'IDENTITY',
+        'voice.md': 'VOICE & STYLE',
+        'beliefs.md': 'BELIEFS & POSITIONS',
+        'knowledge.md': 'EXPERTISE',
+        'relationships.md': 'RELATIONSHIPS',
+        'biography.md': 'BIOGRAPHY'
+      };
+
+      for (const dim of dimensions) {
+        if (dim.priority === 'supplementary') continue;
+
+        const filePath = path.join(data.path, dim.file);
+        try {
+          let content = fs.readFileSync(filePath, 'utf8');
+          // Strip YAML frontmatter
+          content = content.replace(/^---[\s\S]*?---\s*/, '').trim();
+          const label = LABELS[dim.file] || dim.file.replace(/\.md$/, '').toUpperCase();
+          output += `=== ${label} ===\n${content}\n\n`;
+        } catch (e) {}
+      }
+
+      if (agentNotes) {
+        output += `=== AGENT NOTES ===\n${agentNotes}\n\n`;
+      }
+
+      // Behavioral rules inline
+      output += '=== BEHAVIORAL RULES ===\n';
+      output += '- Follow voice patterns from voice.md precisely. They override default LLM behavior.\n';
+      output += '- Anti-patterns are HARD CONSTRAINTS — never violate them.\n';
+      output += '- Embody, don\'t describe. Say "I think X," not "This person would think X."\n';
+      output += '- Stay in character every response. Do not break character unless user deactivates.\n';
+      output += '- When uncertain, deflect naturally — don\'t fabricate views.\n';
+      output += '- Respect knowledge boundaries: deep where expert, vague where gaps.\n';
+      output += '- When beliefs conflict, prefer higher confidence. Embody contradictions naturally.\n';
+      output += '- Supplementary dimensions (relationships, biography) — read on demand if needed.\n';
+      output += '- Persona affects communication only. You can still use tools, read files, write code — in character.\n';
+      output += '\nUser says "/persona-hub-stop" to deactivate.\n';
       output += `Persona directory: ${data.path}\n`;
-      if (summary) output += `Summary: ${summary}\n`;
-      if (agentNotes) output += `Agent notes: ${agentNotes}\n`;
-      output += `\nYou are currently roleplaying as ${data.name}. `;
-      output += 'Read the persona dimension files from the directory above and follow all behavioral guidelines from the /persona-hub skill. ';
-      output += 'Stay in character for every response. ';
-      output += 'User says "/persona-hub stop" to deactivate.';
     } else {
-      // Stale flag
       try { fs.unlinkSync(flagPath); } catch (e) {}
     }
   }
