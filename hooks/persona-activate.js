@@ -104,7 +104,11 @@ try {
     settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
     if (settings.statusLine && settings.statusLine.command &&
         settings.statusLine.command.includes('persona-statusline')) {
-      hasPersonaStatusline = true;
+      // Verify the script still exists (cache path changes on reinstall)
+      const match = settings.statusLine.command.match(/"([^"]+persona-statusline\.[^"]+)"/);
+      if (match && fs.existsSync(match[1])) {
+        hasPersonaStatusline = true;
+      }
     }
   }
 
