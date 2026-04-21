@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // persona-hub — UserPromptSubmit hook
 //
-// Inspects user input for deactivation commands and cleans up the flag file.
-// Does NOT emit to stdout — persistence is handled by SessionStart hook
-// (which re-runs on /clear). Matches caveman's pattern.
+// 1. Detects deactivation commands and cleans up the flag file.
+// 2. Emits a one-line persona reminder if a persona is active.
+//    This prevents the agent from drifting out of character over long conversations.
 
 const fs = require('fs');
 const { getFlagPath } = require('./persona-config');
@@ -32,6 +32,17 @@ process.stdin.on('end', () => {
 
     if (deactivatePatterns.some(p => p.test(prompt))) {
       try { fs.unlinkSync(flagPath); } catch (e) {}
+      return;
+    }
+
+    // Emit one-line reminder if persona is active
+    if (fs.existsSync(flagPath)) {
+      try {
+        const flag = JSON.parse(fs.readFileSync(flagPath, 'utf8'));
+        if (flag.name) {
+          process.stdout.write(`[PERSONA ACTIVE: ${flag.name}] Stay in character. Voice, beliefs, identity — every response. Off only: /persona-hub-stop`);
+        }
+      } catch (e) {}
     }
   } catch (e) {
     // Silent fail — never block user input
