@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "persona-hub",
+  "description": "AI persona management for coding agents. Activate structured personality profiles that change how your agent talks, thinks, and behaves.",
+  "owner": {
+    "name": "Asim Ersoy",
+    "url": "https://github.com/asimokby"
+  },
+  "plugins": [
+    {
+      "name": "persona-hub",
+      "description": "Activate AI personas. /persona <name> to start, /persona list to browse, /persona create to build new.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

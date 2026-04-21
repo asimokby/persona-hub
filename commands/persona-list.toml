@@ -1,0 +1,2 @@
+description = "List available personas"
+prompt = "List all available personas. Follow the /persona skill listing protocol: scan ./personas/ and ~/.persona-hub/personas/ for active personas and display them in a formatted table."

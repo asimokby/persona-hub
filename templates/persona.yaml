@@ -1,0 +1,64 @@
+# persona.yaml — Manifest / Entry Point
+# This is the first file an agent or tool reads.
+# It describes the persona and lists available dimension files.
+
+version: "1.0"
+id: persona-slug                    # lowercase, hyphenated (matches directory name)
+name: "Full Name"
+type: real                          # real | fictional | composite
+status: draft                       # draft | active | archived
+
+# One-paragraph summary of who this person is and how they come across.
+# This is loaded into every agent prompt, so make it count.
+summary: >
+  A brief, vivid description of this person — their role, what they're known
+  for, and the overall impression they give. 2-4 sentences.
+
+# Available dimension files and their loading priority.
+# The standard dimensions are listed below, but you can add ANY custom .md file
+# as a dimension. Just add it to this list with a priority and description.
+# Examples of custom dimensions: humor_style.md, controversies.md,
+# negotiation_tactics.md, catchphrases.md, emotional_triggers.md, etc.
+# The schema is open — if a source reveals a dimension worth capturing
+# that doesn't fit the standard files, create a new one.
+dimensions:
+  # --- Standard dimensions ---
+  - file: identity.md
+    priority: required              # required | recommended | supplementary
+    description: "Core identity and background"
+  - file: voice.md
+    priority: required
+    description: "Speaking style and verbal patterns"
+  - file: beliefs.md
+    priority: recommended
+    description: "Worldview, values, and positions"
+  - file: knowledge.md
+    priority: recommended
+    description: "Domains of expertise"
+  - file: relationships.md
+    priority: supplementary
+    description: "Key relationships and affiliations"
+  - file: biography.md
+    priority: supplementary
+    description: "Life timeline and key events"
+  # --- Custom dimensions ---
+  # Add persona-specific dimensions here. Examples:
+  # - file: humor_style.md
+  #   priority: recommended
+  #   description: "Comedy patterns, joke structure, what they find funny"
+  # - file: controversies.md
+  #   priority: supplementary
+  #   description: "Major controversies and how they responded"
+
+# Instructions for the agent on how to use these files.
+# Include persona-specific behavioral notes here.
+agent_notes: >
+  Load required files always. Load recommended files if context window allows.
+  When beliefs contradict each other, prefer the entry with the more recent
+  time_period. Voice patterns should override generic LLM tendencies.
+
+# Metadata
+created: 2026-01-01
+last_updated: 2026-01-01
+primary_author: ""
+tags: []

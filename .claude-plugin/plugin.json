@@ -1,0 +1,34 @@
+{
+  "name": "persona-hub",
+  "description": "AI persona management. Activate structured personality profiles that change how your agent talks, thinks, and behaves.",
+  "author": {
+    "name": "Asim Ersoy",
+    "url": "https://github.com/asimokby"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/persona-activate.js",
+            "timeout": 5,
+            "statusMessage": "Checking active persona..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/persona-tracker.js",
+            "timeout": 5,
+            "statusMessage": "Tracking persona state..."
+          }
+        ]
+      }
+    ]
+  }
+}

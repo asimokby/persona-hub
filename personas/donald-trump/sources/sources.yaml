@@ -1,0 +1,142 @@
+sources:
+  trump-art-of-deal:
+    type: book
+    title: "Trump: The Art of the Deal"
+    date: 1987-11-01
+    author: "Donald Trump, Tony Schwartz"
+    reliability: secondary
+    notes: "Ghost-written by Tony Schwartz. Represents how Trump wants to be seen. Schwartz later disavowed many claims."
+
+  wikipedia-trump:
+    type: article
+    title: "Donald Trump — Wikipedia"
+    date: 2026-04-09
+    url: "https://en.wikipedia.org/wiki/Donald_Trump"
+    reliability: secondary
+    notes: "Aggregated biographical reference. Cross-reference specific claims."
+
+  rallies-2024:
+    type: speech
+    title: "2024 Campaign Rally Speeches (aggregated)"
+    date: 2024-11-01
+    reliability: primary
+    notes: "Direct speech. Peak Trump voice — freewheeling, crowd-responsive, unscripted."
+
+  trump-tweets-archive:
+    type: social-media
+    title: "Trump Twitter/Truth Social Archive"
+    date: 2024-12-31
+    reliability: primary
+    notes: "Direct authorship. Covers Twitter era (2009-2021) and Truth Social (2022-)."
+
+  debate-2024:
+    type: interview
+    title: "2024 Presidential Debates"
+    date: 2024-09-10
+    reliability: primary
+    notes: "Direct speech in adversarial context. Shows debate-mode persona."
+
+  apprentice-clips:
+    type: interview
+    title: "The Apprentice — Selected Episodes"
+    date: 2015-01-01
+    reliability: primary
+    notes: "Edited TV, but Trump's delivery and catchphrases are authentic. 'You're fired.'"
+
+  # --- Rev.com Transcripts (2026 ingestion) ---
+
+  artemis-ii-2026:
+    type: speech
+    title: "Trump Speaks to Artemis II Crew"
+    date: 2026-04-07
+    url: "https://www.rev.com/transcripts/artemis-ii-crew-broadcast"
+    reliability: primary
+    notes: "Video call with astronauts orbiting the moon. Warm, avuncular mode. Rich self-referential patterns. Full transcript obtained."
+
+  trumprx-2026:
+    type: speech
+    title: "TrumpRX Drug Pricing Announcement"
+    date: 2026-03-01
+    url: "https://www.rev.com/transcripts/trumprx-announcement"
+    reliability: primary
+    notes: "Policy announcement launching trumprx.gov. Salesman mode. Detailed drug pricing numbers. Praises team members. Full transcript obtained."
+
+  west-point-2020:
+    type: speech
+    title: "Donald Trump West Point Commencement Speech"
+    date: 2020-06-13
+    url: "https://www.rev.com/transcripts/donald-trump-west-point-commencement-speech-transcript"
+    reliability: primary
+    notes: "Formal military commencement. Mix of teleprompter and ad-libs. Heavy patriotic rhetoric, historical references, military investment boasts. Full transcript obtained."
+
+  taoiseach-2026:
+    type: speech
+    title: "Taoiseach Martin Visits the White House"
+    date: 2026-03-18
+    url: "https://www.rev.com/transcripts/taoiseach-martin-vistits-the-white-house"
+    reliability: primary
+    notes: "Press conference with Irish PM. Pivots heavily to Iran, NATO criticism, UK criticism, windmill rant. Rich in topic-pivoting and comparative diminishment patterns. Full transcript obtained."
+
+  wh-press-conf-2026:
+    type: speech
+    title: "White House Press Conference 4/06/26"
+    date: 2026-04-06
+    url: "https://www.rev.com/transcripts/white-house-press-conference-4-06-26"
+    reliability: primary
+    notes: "Briefing on F-15 rescue mission in Iran. Key quotes on military capability, leakers, 'no American left behind.' Partial transcript — key quotes and topic summaries obtained."
+
+  exec-orders-2026:
+    type: speech
+    title: "Executive Orders Signing 3/16/26"
+    date: 2026-03-16
+    url: "https://www.rev.com/transcripts/executive-orders-3-16-26"
+    reliability: primary
+    notes: "Fraud task force + Iran commentary. Extremely rich source — attacks on specific politicians, B-2 bomber moment, Soleimani commentary, NATO grievances, playground metaphors for geopolitics. Extensive quotes obtained."
+
+  netanyahu-press-conf-2026:
+    type: speech
+    title: "Trump and Netanyahu Press Conference"
+    date: 2026-03-01
+    url: "https://www.rev.com/transcripts/trump-and-netanyahu-press-conference"
+    reliability: primary
+    notes: "Middle East peace plan announcement. Massive name-dropping, civilizational framing, Jerusalem embassy story, deal-making identity. Full transcript obtained."
+
+  navy-250th-2026:
+    type: speech
+    title: "Trump at Navy 250th Anniversary"
+    date: 2026-03-01
+    url: "https://www.rev.com/transcripts/trump-at-navy-250th"
+    reliability: primary
+    notes: "Military ceremony. Summary only obtained — covers praise for Navy, Iran operations, budget commitments, criticism of previous administrations."
+
+  kennedy-center-2026:
+    type: speech
+    title: "Kennedy Center Luncheon"
+    date: 2026-03-17
+    url: "https://www.rev.com/transcripts/kennedy-center-luncheon"
+    reliability: primary
+    notes: "Board meeting for Trump Kennedy Center. Semi-private setting reveals deep construction knowledge (marble sourcing, gold paint limitations, acoustic properties, structural assessment). Also covers Iran, NATO complaints, personal anecdotes about predicting events. Full transcript obtained."
+
+  womens-history-2026:
+    type: speech
+    title: "Women's History Month Event"
+    date: 2026-03-15
+    url: "https://www.rev.com/transcripts/womens-history-month-event"
+    reliability: primary
+    notes: "Women's History Month celebration. Rich in dramatized negotiation pattern (Macron drug pricing call), anti-preparation stance, SAVE Act priorities, gender policy. Full transcript obtained."
+
+  kaggle-506-dataset:
+    type: speech
+    title: "Donald Trump Rev.com Speech Transcripts Dataset (Kaggle)"
+    date: 2024-09-24
+    url: "https://www.kaggle.com/datasets/tangtaidje/donald-trump-rev-com-speech-transcripts-dataset"
+    reliability: primary
+    notes: "506 transcripts from rev.com, 2015-2024, 3.2 million words total. Covers rallies, press conferences, interviews, debates, UN speeches, COVID briefings. Bulk analysis across all transcripts."
+
+  un-speech-2025:
+    type: speech
+    title: "Trump Speaks at U.N. General Assembly"
+    date: 2025-09-23
+    url: "https://www.rev.com/transcripts/trump-speaks-at-un"
+    reliability: primary
+    notes: "Major UN General Assembly address. Teleprompter failure turned into a flex. Covers economy, immigration (global scope), seven wars claim, Iran/Operation Midnight Hammer, Ukraine, climate denial, green energy criticism, tariffs, Brazil encounter, UN renovation bid story. The most comprehensive single Trump speech in the collection. Full transcript obtained."

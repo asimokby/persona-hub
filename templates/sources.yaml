@@ -1,0 +1,13 @@
+# sources.yaml — Source Registry
+# All sources referenced via [source:id] in dimension files are defined here.
+# Source IDs should be short, descriptive, and hyphenated.
+
+sources:
+  example-source:
+    type: interview                 # interview | article | book | social-media | speech | observation
+    title: "Title of the source"
+    date: 2026-01-01
+    url: ""                         # optional
+    author: ""                      # optional, for third-party sources
+    reliability: primary            # primary (direct quote) | secondary (reported) | tertiary (hearsay)
+    notes: ""                       # optional context about the source

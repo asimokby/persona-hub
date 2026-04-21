@@ -1,0 +1,8 @@
+{
+  "hooks": {
+    "session-start": {
+      "command": "cat rules/persona-activate.md",
+      "description": "Check for active persona"
+    }
+  }
+}
