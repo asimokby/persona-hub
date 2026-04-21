@@ -1,9 +1,9 @@
 ---
 name: persona-hub
-description: "AI persona management. Activate personality profiles for your agent."
+description: "Activate a persona by name"
 ---
 
-# Persona-Hub
+# Persona-Hub — Activate
 
 Activate structured AI personas that change how you talk, think, and behave. Each persona is a directory of markdown files defining identity, voice, beliefs, knowledge, and relationships.
 
@@ -11,11 +11,11 @@ Activate structured AI personas that change how you talk, think, and behave. Eac
 
 | User Input | Action |
 |---|---|
-| `/persona-hub list` | List available personas |
 | `/persona-hub <name-or-slug>` | Activate a persona |
-| `/persona-hub stop` | Deactivate current persona |
-| `/persona-hub create` | Create a new persona |
-| `/persona-hub help` | Show quick-reference card |
+| `/persona-hub-list` | List available personas |
+| `/persona-hub-stop` | Deactivate current persona |
+| `/persona-hub-create` | Create a new persona |
+| `/persona-hub-help` | Show quick-reference card |
 | "be X", "talk like X", "impersonate X" | Activate persona matching X |
 | "stop persona", "normal mode", "be yourself" | Deactivate |
 
@@ -23,7 +23,7 @@ Activate structured AI personas that change how you talk, think, and behave. Eac
 
 ## Persona Resolution
 
-Search these directories in order. Merge results for listing; first match wins for activation.
+Search these directories in order. First match wins for activation.
 
 1. **Project-local:** `./personas/` (relative to working directory)
 2. **Plugin-bundled:** Check the SessionStart context for a `Plugin personas:` line — this is the plugin's own `personas/` directory containing bundled examples
@@ -148,141 +148,11 @@ These rules are MANDATORY while a persona is active:
 
 ---
 
-## Listing Protocol
-
-When the user says `/persona-hub list`:
-
-1. Scan all three resolution paths for directories containing `persona.yaml`
-2. Read each manifest, filter to `status: active`
-3. Display a formatted list with: name, slug, summary (truncated), dimension count
-4. Check `~/.persona-hub/.active-persona` to mark the currently active persona
-5. Show which paths were searched
-
----
-
-## Deactivation Protocol
-
-When the user says `/persona-hub stop`:
-
-1. Delete `~/.persona-hub/.active-persona` if it exists
-2. Acknowledge: "Persona deactivated. Back to normal."
-3. Immediately return to normal agent behavior.
-
----
-
-## Create Protocol
-
-When the user says `/persona-hub create`:
-
-### Gather input
-Ask for: **name**, **type** (real/fictional/composite), and **source materials** (description, files, URLs, or "start minimal"). If the user already provided some of this, don't re-ask.
-
-### Scaffold
-1. Derive slug from name (lowercase, hyphens, strip special chars)
-2. Target: `./personas/<slug>/` if `personas/` exists in cwd, otherwise `~/.persona-hub/personas/<slug>/`
-3. If slug already exists, ask: update existing or pick different name?
-4. Create directory with: `persona.yaml`, `identity.md`, `voice.md`, `sources/sources.yaml`, `changelog.md`
-5. Only create `beliefs.md`, `knowledge.md`, `relationships.md` if sources support them
-
-### Write persona.yaml
-```yaml
-version: "1.0"
-id: <slug>
-name: "<Full Name>"
-type: <real|fictional|composite>
-status: draft
-summary: >
-  <2-4 sentence description>
-dimensions:
-  - file: identity.md
-    priority: required
-    description: "Core identity and background"
-  - file: voice.md
-    priority: required
-    description: "Speaking style and verbal patterns"
-agent_notes: >
-  Load required files always. Voice patterns override generic LLM tendencies.
-created: <today>
-last_updated: <today>
-primary_author: ""
-tags: []
-```
-
-### Populate dimension files
-Every `.md` file starts with YAML frontmatter: `dimension`, `version: 1`, `last_updated`, `confidence`, `sources`.
-
-For each source, extract and distribute:
-- **voice.md** — sentence structure, vocabulary, verbal tics, rhetorical moves, tone, anti-patterns (NEVER say)
-- **identity.md** — background, roles, self-concept, public vs private
-- **beliefs.md** — core values, positions by topic, temporal evolution, contradictions
-- **knowledge.md** — deep expertise, working knowledge, gaps
-- **relationships.md** — key people, dynamics, patterns
-
-Add inline citations: `[source:source-id, confidence:level]`
-Register sources in `sources/sources.yaml`.
-
-### MVP check
-Verify persona.yaml + identity.md + voice.md have content.
-- If yes: set `status: active`, offer to activate
-- If no: keep `status: draft`, tell user what's missing
-
-### Updating existing personas
-If called on an existing slug: ADD new findings to existing files, bump versions, register sources, append to changelog.
-
----
-
-## Help Card
-
-When the user says `/persona-hub help`, display:
-
-```
-Persona-Hub Commands
-─────────────────────────────────────
-/persona-hub list          Show available personas
-/persona-hub <name>        Activate a persona
-/persona-hub stop          Deactivate current persona
-/persona-hub create        Create new persona from sources
-/persona-hub help          This card
-
-Persona Locations
-─────────────────────────────────────
-Project-local:   ./personas/
-Plugin-bundled:  (auto-detected)
-Global:          ~/.persona-hub/personas/
-
-MVP = persona.yaml + identity.md + voice.md
-
-Priorities: required (always) → recommended (if available) → supplementary (on demand)
-
-Full spec: AGENT_PROTOCOL.md
-```
-
----
-
 ## Edge Cases
 
-- **No personas found:** Tell user to create one with `/persona-hub create`
+- **No personas found:** Tell user to create one with `/persona-hub-create`
 - **Persona already active:** Overwrite — activate the new one directly
 - **Missing required files:** Warn but activate with what's available
 - **Ambiguous name match:** List matches, ask user to specify by slug
 - **User asks to break character:** Treat as deactivation request
 - **Malformed persona.yaml:** Tell user about the syntax error, don't activate
-
----
-
-## Persona File Format Reference
-
-```
-personas/<slug>/
-  persona.yaml          # Manifest — read first
-  identity.md           # Who they are (required)
-  voice.md              # How they talk (required)
-  beliefs.md            # What they think (recommended)
-  knowledge.md          # What they know (recommended)
-  relationships.md      # Key people (supplementary)
-  biography.md          # Timeline (supplementary)
-  sources/sources.yaml  # Source registry
-  changelog.md          # Update log
-```
-
-Custom `.md` dimensions can be added — register in `persona.yaml`.
