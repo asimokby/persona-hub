@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "persona-hub",
-      "description": "Activate AI personas. /persona <name> to start, /persona list to browse, /persona create to build new.",
+      "description": "Activate AI personas. /persona-hub <name> to start, /persona-hub list to browse, /persona-hub create to build new.",
       "source": "./",
       "category": "productivity"
     }
