@@ -7,89 +7,58 @@ on:
       - 'skills/**'
       - 'rules/**'
 
+permissions:
+  contents: write
+
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # Sync main skill to platform-specific locations
-      - name: Sync persona skill
+      - name: Sync skill files to platform mirrors
         run: |
-          # Claude Code — canonical is already at skills/persona/SKILL.md
-
-          # Cursor
+          # Cursor skill
           mkdir -p .cursor/skills/persona
           cp skills/persona/SKILL.md .cursor/skills/persona/SKILL.md
 
-          # Windsurf
+          # Windsurf skill
           mkdir -p .windsurf/skills/persona
           cp skills/persona/SKILL.md .windsurf/skills/persona/SKILL.md
 
-      # Generate platform-specific rules
-      - name: Generate Cursor rule
-        run: |
+          # Cursor rule (with alwaysApply frontmatter)
           mkdir -p .cursor/rules
-          cat > .cursor/rules/persona.mdc << 'RULE_EOF'
-          ---
-          description: "Persona-Hub auto-activation rule"
-          alwaysApply: true
-          ---
+          {
+            echo '---'
+            echo 'description: "Persona-Hub auto-activation rule"'
+            echo 'alwaysApply: true'
+            echo '---'
+            echo ''
+            cat rules/persona-activate.md
+          } > .cursor/rules/persona.mdc
 
-          $(cat rules/persona-activate.md)
-          RULE_EOF
-
-      - name: Generate Windsurf rule
-        run: |
+          # Windsurf rule (with trigger frontmatter)
           mkdir -p .windsurf/rules
-          cat > .windsurf/rules/persona.md << 'RULE_EOF'
-          ---
-          trigger: always_on
-          ---
+          {
+            echo '---'
+            echo 'trigger: always_on'
+            echo '---'
+            echo ''
+            cat rules/persona-activate.md
+          } > .windsurf/rules/persona.md
 
-          $(cat rules/persona-activate.md)
-          RULE_EOF
-
-      - name: Sync Cline rules
-        run: |
+          # Cline
           mkdir -p .clinerules
           cp rules/persona-activate.md .clinerules/persona.md
 
-      - name: Generate Copilot instructions
-        run: |
+          # Copilot
           cp rules/persona-activate.md .github/copilot-instructions.md
 
-      - name: Generate Codex hooks
-        run: |
-          mkdir -p .codex
-          cat > .codex/hooks.json << 'EOF'
-          {
-            "hooks": {
-              "session-start": {
-                "command": "cat rules/persona-activate.md",
-                "description": "Check for active persona"
-              }
-            }
-          }
-          EOF
-
-      - name: Generate agents marketplace
-        run: |
-          mkdir -p .agents/plugins
-          cat > .agents/plugins/marketplace.json << 'EOF'
-          {
-            "name": "persona-hub",
-            "description": "AI persona management. Activate structured personality profiles.",
-            "skills": ["skills/persona/SKILL.md", "skills/persona-create/SKILL.md", "skills/persona-help/SKILL.md"]
-          }
-          EOF
-
-      # Commit synced files
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .cursor/ .windsurf/ .clinerules/ .github/copilot-instructions.md .codex/ .agents/
+          git add .cursor/ .windsurf/ .clinerules/ .github/copilot-instructions.md
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
