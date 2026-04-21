@@ -4,6 +4,10 @@ AI persona management for coding agents. Activate structured personality profile
 
 Works with Claude Code, Cursor, Windsurf, Cline, GitHub Copilot, OpenClaw, Hermes, and any agent supporting the [Agent Skills](https://agentskills.io) specification.
 
+<p align="center">
+  <img src="assets/demo.gif" alt="PersonaHub Demo — activating Trump persona in Claude Code" width="700">
+</p>
+
 ## Install
 
 Pick your agent. One command. Done.
