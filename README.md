@@ -19,6 +19,14 @@ Pick your agent. One command. Done.
 
 Install once. Use in every session after that.
 
+### Update
+
+Use `/persona-hub-update` inside Claude Code, or manually:
+
+```bash
+claude plugin uninstall persona-hub@persona-hub && claude plugin install persona-hub@persona-hub
+```
+
 ## Quick Start
 
 ```
