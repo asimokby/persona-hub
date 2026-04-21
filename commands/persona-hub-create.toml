@@ -1,2 +1,2 @@
-description = "Create a new persona from sources"
-prompt = "Follow the /persona-hub skill create protocol. Guide the user through creating a new persona. Ask for name, type, and source materials. {{args}}"
+description = "Create or enrich a persona from folders, files, URLs, or text"
+prompt = "Follow the /persona-hub-create skill instructions. Guide the user through creating or enriching a persona. Accept any source type: folders of transcripts, individual files, URLs, or text descriptions. If the persona already exists, enrich it with new sources. {{args}}"

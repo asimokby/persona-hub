@@ -43,7 +43,7 @@ claude plugin uninstall persona-hub@persona-hub && claude plugin install persona
 | `/persona-hub <name>` | Activate a persona |
 | `/persona-hub-list` | Show available personas |
 | `/persona-hub-stop` | Deactivate current persona |
-| `/persona-hub-create` | Create a new persona from files, links, or description |
+| `/persona-hub-create` | Create or enrich a persona from folders, files, URLs, or text |
 | `/persona-hub-help` | Show quick-reference card |
 | `/persona-hub-update` | Update plugin to latest version |
 
@@ -85,10 +85,17 @@ When you activate a persona, the agent reads these files and adopts the persona'
 
 ## Creating a Persona
 
-Run `/persona-hub-create` and provide:
-- A name and description
-- Source materials: transcripts, articles, URLs, or text
-- The agent analyzes sources and builds dimension files automatically
+Run `/persona-hub-create` and provide sources. Accepts anything:
+- **Folders** — point to a directory of transcripts, interviews, or writings (best results)
+- **Files** — individual `.txt`, `.md`, or `.json` files
+- **URLs** — links to articles, interviews, public statements
+- **Text** — describe the persona in your own words
+
+The agent analyzes all sources and builds dimension files automatically. More sources = more authentic persona.
+
+### Enriching an Existing Persona
+
+Run `/persona-hub-create` again on the same persona name to add new sources. New findings are merged into existing files — nothing gets overwritten.
 
 Or manually: copy `templates/` to `personas/<slug>/` and fill in the files.
 

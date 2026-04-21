@@ -1,6 +1,6 @@
 ---
 name: persona-hub-create
-description: "Create or enrich a persona from sources"
+description: "Create or enrich a persona from folders, files, URLs, or text"
 ---
 
 # Persona-Hub — Create & Enrich
