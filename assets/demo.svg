@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="980" viewBox="0 0 880 980">
+  <style>
+    .bg { fill: #1e1e2e; }
+    .titlebar { fill: #181825; }
+    .btn-red { fill: #f38ba8; }
+    .btn-yellow { fill: #f9e2af; }
+    .btn-green { fill: #a6e3a1; }
+    .title { fill: #cdd6f4; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+    .header { fill: #cdd6f4; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; font-weight: bold; }
+    .dim { fill: #6c7086; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+    .prompt { fill: #89b4fa; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+    .cmd { fill: #cdd6f4; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+    .agent { fill: #a6adc8; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+    .success { fill: #a6e3a1; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+    .bullet { fill: #89b4fa; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+    .statusbar { fill: #11111b; }
+    .statustext { fill: #fab387; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 11px; font-weight: bold; }
+    .separator { fill: #45475a; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+    .logo { fill: #f38ba8; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Menlo', monospace; font-size: 12px; }
+  </style>
+
+  <!-- Background -->
+  <rect class="bg" width="880" height="980" rx="10"/>
+
+  <!-- Title bar -->
+  <rect class="titlebar" width="880" height="36" rx="10"/>
+  <rect class="titlebar" x="0" y="26" width="880" height="10"/>
+  <circle class="btn-red" cx="20" cy="18" r="6"/>
+  <circle class="btn-yellow" cx="40" cy="18" r="6"/>
+  <circle class="btn-green" cx="60" cy="18" r="6"/>
+  <text class="title" x="440" y="22" text-anchor="middle">Claude Code</text>
+
+  <!-- Claude Code header -->
+  <text class="logo" x="20" y="60">▗ ▗   ▖ ▖</text>
+  <text class="header" x="120" y="60">Claude Code</text>
+  <text class="dim" x="230" y="60">v2.1.104</text>
+  <text class="dim" x="120" y="76">Opus 4.6 with medium effort</text>
+  <text class="dim" x="120" y="92">~/Documents/qcri/repos/persona-hub</text>
+
+  <!-- Separator -->
+  <text class="separator" x="20" y="116">────────────────────────────────────────────────────────────────────────────────────────────</text>
+
+  <!-- User prompt 1 -->
+  <text class="prompt" x="20" y="140">❯</text>
+  <text class="cmd" x="36" y="140">/persona-hub trump</text>
+
+  <!-- Agent loading steps -->
+  <text class="bullet" x="20" y="168">⏺</text>
+  <text class="agent" x="36" y="168">Match found: donald-trump. Reading manifest.</text>
+  <text class="bullet" x="20" y="192">⏺</text>
+  <text class="agent" x="36" y="192">Status active. Loading required + recommended dimensions.</text>
+
+  <!-- Activation confirmation -->
+  <text class="bullet" x="20" y="224">⏺</text>
+  <text class="success" x="36" y="224">Persona: Donald J. Trump</text>
+  <text class="agent" x="36" y="242">Loaded: identity.md, voice.md, beliefs.md, knowledge.md</text>
+  <text class="agent" x="36" y="260">Dimensions: 4 loaded, 1 supplementary (relationships.md — on demand)</text>
+  <text class="success" x="36" y="278">Status: Active</text>
+
+  <!-- First in-character response -->
+  <text class="agent" x="36" y="306">Look, this is a tremendous thing you've done here, really</text>
+  <text class="agent" x="36" y="322">tremendous, okay? You activated me — and frankly, not many people</text>
+  <text class="agent" x="36" y="338">know how to do that, believe me. A lot of people are saying this</text>
+  <text class="agent" x="36" y="354">is the best persona activation they've ever seen, not even close.</text>
+  <text class="agent" x="36" y="378">So what do you need? I'm here, I'm ready, I've got the best</text>
+  <text class="agent" x="36" y="394">words — everybody knows that — and whatever you're working on,</text>
+  <text class="agent" x="36" y="410">we're going to make it incredible. Just incredible.</text>
+
+  <!-- Separator -->
+  <text class="separator" x="20" y="442">────────────────────────────────────────────────────────────────────────────────────────────</text>
+
+  <!-- User prompt 2 -->
+  <text class="prompt" x="20" y="466">❯</text>
+  <text class="cmd" x="36" y="466">What do you think about Python briefly?</text>
+
+  <!-- Trump Python response -->
+  <text class="bullet" x="20" y="494">⏺</text>
+  <text class="agent" x="36" y="494">Python — tremendous language, okay? Tremendous. Everybody's using</text>
+  <text class="agent" x="36" y="510">it. I look at Python and I say, "You know what? This is a language</text>
+  <text class="agent" x="36" y="526">that wins." Simple, beautiful syntax — not like those other</text>
+  <text class="agent" x="36" y="542">languages, those horrible, complicated languages that nobody can</text>
+  <text class="agent" x="36" y="558">read. Not even close.</text>
+
+  <text class="agent" x="36" y="586">And you know what? The best people use Python. The AI people, the</text>
+  <text class="agent" x="36" y="602">data people — they all come to me and say, "Sir, Python is</text>
+  <text class="agent" x="36" y="618">incredible." And I say, "I know. I've known that for a long time.</text>
+  <text class="agent" x="36" y="634">I predicted it, actually."</text>
+
+  <text class="agent" x="36" y="662">Now, is it the fastest? No. But you know what it is? It's a</text>
+  <text class="agent" x="36" y="678">dealmaker's language. You get things done fast, you ship it, you</text>
+  <text class="agent" x="36" y="694">win. Speed of development — that's what matters. Believe me. And</text>
+  <text class="agent" x="36" y="710">if you need speed later, you bring in C, you bring in Rust —</text>
+  <text class="agent" x="36" y="726">that's like bringing in the military. Very, very powerful.</text>
+
+  <text class="agent" x="36" y="754">But Python? Python is the closer. Beautiful language. Not even</text>
+  <text class="agent" x="36" y="770">close.</text>
+
+  <!-- Separator -->
+  <text class="separator" x="20" y="802">────────────────────────────────────────────────────────────────────────────────────────────</text>
+
+  <!-- Empty prompt -->
+  <text class="prompt" x="20" y="826">❯</text>
+  <rect fill="#cdd6f4" x="36" y="816" width="8" height="14" opacity="0.7"/>
+
+  <!-- Bottom separator -->
+  <text class="separator" x="20" y="858">────────────────────────────────────────────────────────────────────────────────────────────</text>
+
+  <!-- Status bar -->
+  <rect class="statusbar" x="0" y="870" width="880" height="110" rx="0"/>
+  <rect class="bg" x="0" y="970" width="880" height="10" rx="10"/>
+  <text class="statustext" x="20" y="895">[PERSONA: Donald J. Trump]</text>
+</svg>
