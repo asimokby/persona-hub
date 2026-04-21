@@ -22,21 +22,22 @@ Install once. Use in every session after that.
 ## Quick Start
 
 ```
-/persona-hub list              # See available personas
 /persona-hub donald-trump      # Activate a persona
-/persona-hub stop              # Deactivate
-/persona-hub create            # Build a new persona
+/persona-hub-list              # See available personas
+/persona-hub-stop              # Deactivate
+/persona-hub-create            # Build a new persona
 ```
 
 ## Commands
 
 | Command | What it does |
 |---------|-------------|
-| `/persona-hub list` | Show available personas |
 | `/persona-hub <name>` | Activate a persona |
-| `/persona-hub stop` | Deactivate current persona |
-| `/persona-hub create` | Create a new persona from files, links, or description |
-| `/persona-hub help` | Show quick-reference card |
+| `/persona-hub-list` | Show available personas |
+| `/persona-hub-stop` | Deactivate current persona |
+| `/persona-hub-create` | Create a new persona from files, links, or description |
+| `/persona-hub-help` | Show quick-reference card |
+| `/persona-hub-update` | Update plugin to latest version |
 
 ## How It Works
 
@@ -76,7 +77,7 @@ When you activate a persona, the agent reads these files and adopts the persona'
 
 ## Creating a Persona
 
-Run `/persona-hub create` and provide:
+Run `/persona-hub-create` and provide:
 - A name and description
 - Source materials: transcripts, articles, URLs, or text
 - The agent analyzes sources and builds dimension files automatically
@@ -117,17 +118,20 @@ Hooks provide session persistence (remembers active persona across sessions). Wi
 
 ```
 persona-hub/
-  skills/                     # Skill definitions (source of truth)
-    persona/SKILL.md          # Main skill
-    persona-create/SKILL.md   # Creation workflow
-    persona-help/SKILL.md     # Help card
-  .claude-plugin/             # Claude Code plugin manifest
-  hooks/                      # Session hooks (Claude Code)
-  commands/                   # Slash commands
-  rules/                      # Auto-activation rules
-  personas/                   # Bundled persona examples
-  templates/                  # Starter templates
-  AGENT_PROTOCOL.md           # Full consumption specification
+  skills/                           # Skill definitions (source of truth)
+    persona-hub/SKILL.md            # Main skill — activate personas
+    persona-hub-list/SKILL.md       # List available personas
+    persona-hub-stop/SKILL.md       # Deactivate persona
+    persona-hub-create/SKILL.md     # Create new persona
+    persona-hub-help/SKILL.md       # Help card
+    persona-hub-update/SKILL.md     # Self-update
+  .claude-plugin/                   # Claude Code plugin manifest
+  hooks/                            # Session hooks (Claude Code)
+  commands/                         # Slash commands
+  rules/                            # Auto-activation rules
+  personas/                         # Bundled persona examples
+  templates/                        # Starter templates
+  AGENT_PROTOCOL.md                 # Full consumption specification
 ```
 
 ## Full Specification
@@ -136,7 +140,7 @@ See [AGENT_PROTOCOL.md](AGENT_PROTOCOL.md) for the complete specification: loadi
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Edit `skills/persona/SKILL.md` (source of truth) — CI syncs to all platforms.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Edit `skills/persona-hub/SKILL.md` (source of truth) — CI syncs to all platforms.
 
 ## License
 

@@ -74,7 +74,7 @@ Custom `.md` dimensions can be added — register them in `persona.yaml`.
 
 ## Building a New Persona
 
-Use `/persona-hub create` or manually:
+Use `/persona-hub-create` or manually:
 
 1. Copy `templates/` to `personas/<persona-slug>/`
 2. Fill in `persona.yaml` with name, type, summary
@@ -87,6 +87,6 @@ Use `/persona-hub create` or manually:
 
 - **Trump persona:** Complete (v5). Built from 517 transcripts (~3.5M words). ~1,500 lines across 6 dimension files.
 - **Templates:** Complete for all standard file types.
-- **Skills:** 1 consolidated skill (persona-hub)
+- **Skills:** 6 skills (persona-hub, persona-hub-list, persona-hub-stop, persona-hub-create, persona-hub-help, persona-hub-update)
 - **Hooks:** SessionStart + UserPromptSubmit for Claude Code
 - **Platform support:** Claude Code, Cursor, Windsurf, Cline, Copilot, OpenClaw, Hermes, Gemini
