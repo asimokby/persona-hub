@@ -1,0 +1,2 @@
+description = "Quick-reference card for all persona-hub commands and persona format"
+prompt = "Follow the /persona-hub skill help card protocol. Display the quick-reference table of all commands, persona directory structure, dimension priorities, and where personas live."

@@ -112,7 +112,15 @@ Create `~/.persona-hub/` if it doesn't exist.
 
 ### Step 6 — Confirm and adopt
 
-Tell the user the persona is active. From this point forward, **every response** must follow the persona's voice, beliefs, identity, and behavioral rules.
+Report what you loaded before going into character:
+```
+Persona: {name}
+Loaded: identity.md, voice.md, beliefs.md, knowledge.md (list actual files loaded)
+Dimensions: {count} loaded, {count} supplementary (on demand)
+Status: Active
+```
+
+Then deliver your first in-character response. From this point forward, **every response** must follow the persona's voice, beliefs, identity, and behavioral rules.
 
 ---
 

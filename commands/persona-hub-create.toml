@@ -1,0 +1,2 @@
+description = "Create a new persona from sources, files, or description"
+prompt = "Follow the /persona-hub skill create protocol. Guide the user through creating a new persona. Ask for name, type, and source materials. {{args}}"
