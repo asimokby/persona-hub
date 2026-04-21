@@ -3,20 +3,13 @@
 //
 // Runs on EVERY user message:
 //   1. Detects deactivation commands and cleans up flag file
-//   2. If persona is active, emits full persona content to survive /clear
+//   2. If persona is active, emits compact persona reminder (~2-3KB)
+//      Keeps voice patterns + anti-patterns (critical for character).
+//      Full content is in SessionStart; this is the /clear safety net.
 
 const fs = require('fs');
 const path = require('path');
 const { getFlagPath } = require('./persona-config');
-
-const LABELS = {
-  'identity.md': 'IDENTITY',
-  'voice.md': 'VOICE & STYLE',
-  'beliefs.md': 'BELIEFS & POSITIONS',
-  'knowledge.md': 'EXPERTISE',
-  'relationships.md': 'RELATIONSHIPS',
-  'biography.md': 'BIOGRAPHY'
-};
 
 const flagPath = getFlagPath();
 
@@ -45,7 +38,7 @@ process.stdin.on('end', () => {
       return;
     }
 
-    // If persona is active, emit full persona content
+    // If persona is active, emit compact reminder
     if (fs.existsSync(flagPath)) {
       let flagData;
       try {
@@ -53,52 +46,55 @@ process.stdin.on('end', () => {
       } catch (e) { return; }
 
       const personaDir = flagData.path;
-      const manifestPath = path.join(personaDir, 'persona.yaml');
-      if (!fs.existsSync(manifestPath)) {
+      if (!fs.existsSync(path.join(personaDir, 'persona.yaml'))) {
         try { fs.unlinkSync(flagPath); } catch (e) {}
         return;
       }
 
-      // Read manifest
+      // Read summary from manifest
       let summary = '';
-      let agentNotes = '';
-      let dimensions = [];
       try {
-        const content = fs.readFileSync(manifestPath, 'utf8');
-        const summaryMatch = content.match(/^summary:\s*>?\s*\n((?:\s{2,}.+\n?)+)/m);
-        if (summaryMatch) summary = summaryMatch[1].replace(/^\s{2,}/gm, '').trim();
-        const notesMatch = content.match(/^agent_notes:\s*>?\s*\n((?:\s{2,}.+\n?)+)/m);
-        if (notesMatch) agentNotes = notesMatch[1].replace(/^\s{2,}/gm, '').trim();
-        const dimMatches = content.matchAll(/- file:\s*(\S+)\s*\n\s*priority:\s*(\S+)/g);
-        for (const m of dimMatches) dimensions.push({ file: m[1], priority: m[2] });
+        const manifest = fs.readFileSync(path.join(personaDir, 'persona.yaml'), 'utf8');
+        const m = manifest.match(/^summary:\s*>?\s*\n((?:\s{2,}.+\n?)+)/m);
+        if (m) summary = m[1].replace(/^\s{2,}/gm, '').trim();
+      } catch (e) {}
+
+      // Read voice.md — extract just the key patterns and anti-patterns
+      let voiceCompact = '';
+      try {
+        let voice = fs.readFileSync(path.join(personaDir, 'voice.md'), 'utf8');
+        voice = voice.replace(/^---[\s\S]*?---\s*/, '').trim();
+
+        // Extract key sections: Signature Patterns + Anti-patterns
+        const sections = [];
+        const sigMatch = voice.match(/## (?:Signature|Key|Core) (?:Patterns|Style|Moves)[\s\S]*?(?=\n## |\n$)/i);
+        if (sigMatch) sections.push(sigMatch[0].trim());
+        const antiMatch = voice.match(/## Anti-patterns[\s\S]*?(?=\n## |\n$)/i);
+        if (antiMatch) sections.push(antiMatch[0].trim());
+
+        if (sections.length > 0) {
+          voiceCompact = sections.join('\n\n');
+        } else {
+          // Fallback: take first 1500 chars of voice
+          voiceCompact = voice.substring(0, 1500);
+        }
       } catch (e) {}
 
       let output = `PERSONA ACTIVE: ${flagData.name}\n\n`;
-      output += `You are roleplaying as ${flagData.name}.\n\n`;
-      if (summary) output += `${summary}\n\n`;
+      output += `## Persistence\n\n`;
+      output += `ACTIVE EVERY RESPONSE. Stay in character always. Do not revert. Off only: "/persona-hub-stop".\n\n`;
+      output += `You are roleplaying as ${flagData.name}. ${summary}\n\n`;
 
-      // Emit required + recommended dimension content
-      for (const dim of dimensions) {
-        if (dim.priority === 'supplementary') continue;
-        const filePath = path.join(personaDir, dim.file);
-        try {
-          let content = fs.readFileSync(filePath, 'utf8');
-          content = content.replace(/^---[\s\S]*?---\s*/, '').trim();
-          const label = LABELS[dim.file] || dim.file.replace(/\.md$/, '').toUpperCase();
-          output += `=== ${label} ===\n${content}\n\n`;
-        } catch (e) {}
+      if (voiceCompact) {
+        output += `=== VOICE (CRITICAL) ===\n${voiceCompact}\n\n`;
       }
 
-      if (agentNotes) output += `=== AGENT NOTES ===\n${agentNotes}\n\n`;
-
-      output += '=== BEHAVIORAL RULES ===\n';
-      output += '- Follow voice patterns precisely. They override default LLM behavior.\n';
-      output += '- Anti-patterns are HARD CONSTRAINTS — never violate them.\n';
+      output += '=== RULES ===\n';
+      output += '- Follow voice patterns precisely. Anti-patterns are HARD CONSTRAINTS.\n';
       output += '- Embody, don\'t describe. Say "I think X," not "This person would think X."\n';
-      output += '- Stay in character every response.\n';
-      output += '- When uncertain, deflect naturally — don\'t fabricate views.\n';
-      output += '- Persona affects communication only. You can still use tools and write code — in character.\n';
-      output += '\nDeactivate: /persona-hub-stop\n';
+      output += '- Stay in character every response. You can still use tools — in character.\n';
+      output += `\nFull persona files: ${personaDir}\n`;
+      output += 'Deactivate: /persona-hub-stop\n';
 
       process.stdout.write(output);
     }
