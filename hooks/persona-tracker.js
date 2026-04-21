@@ -3,12 +3,20 @@
 //
 // Runs on EVERY user message:
 //   1. Detects deactivation commands and cleans up flag file
-//   2. If persona is active, emits compact persona reminder
-//      This ensures persona survives /clear and context compression.
+//   2. If persona is active, emits full persona content to survive /clear
 
 const fs = require('fs');
 const path = require('path');
 const { getFlagPath } = require('./persona-config');
+
+const LABELS = {
+  'identity.md': 'IDENTITY',
+  'voice.md': 'VOICE & STYLE',
+  'beliefs.md': 'BELIEFS & POSITIONS',
+  'knowledge.md': 'EXPERTISE',
+  'relationships.md': 'RELATIONSHIPS',
+  'biography.md': 'BIOGRAPHY'
+};
 
 const flagPath = getFlagPath();
 
@@ -37,14 +45,12 @@ process.stdin.on('end', () => {
       return;
     }
 
-    // If persona is active, emit compact reminder on every message
+    // If persona is active, emit full persona content
     if (fs.existsSync(flagPath)) {
       let flagData;
       try {
         flagData = JSON.parse(fs.readFileSync(flagPath, 'utf8'));
-      } catch (e) {
-        return;
-      }
+      } catch (e) { return; }
 
       const personaDir = flagData.path;
       const manifestPath = path.join(personaDir, 'persona.yaml');
@@ -53,25 +59,46 @@ process.stdin.on('end', () => {
         return;
       }
 
-      // Read voice.md for key patterns (most critical for staying in character)
-      let voiceSummary = '';
+      // Read manifest
+      let summary = '';
+      let agentNotes = '';
+      let dimensions = [];
       try {
-        let voice = fs.readFileSync(path.join(personaDir, 'voice.md'), 'utf8');
-        voice = voice.replace(/^---[\s\S]*?---\s*/, '').trim();
-        // Extract just anti-patterns section if it exists
-        const antiMatch = voice.match(/## Anti-patterns[\s\S]*?(?=\n## |\n$|$)/i);
-        if (antiMatch) {
-          voiceSummary = antiMatch[0].trim();
-        }
+        const content = fs.readFileSync(manifestPath, 'utf8');
+        const summaryMatch = content.match(/^summary:\s*>?\s*\n((?:\s{2,}.+\n?)+)/m);
+        if (summaryMatch) summary = summaryMatch[1].replace(/^\s{2,}/gm, '').trim();
+        const notesMatch = content.match(/^agent_notes:\s*>?\s*\n((?:\s{2,}.+\n?)+)/m);
+        if (notesMatch) agentNotes = notesMatch[1].replace(/^\s{2,}/gm, '').trim();
+        const dimMatches = content.matchAll(/- file:\s*(\S+)\s*\n\s*priority:\s*(\S+)/g);
+        for (const m of dimMatches) dimensions.push({ file: m[1], priority: m[2] });
       } catch (e) {}
 
-      let output = `PERSONA ACTIVE: ${flagData.name}. Stay in character.\n`;
-      if (voiceSummary) {
-        output += `\n${voiceSummary}\n`;
+      let output = `PERSONA ACTIVE: ${flagData.name}\n\n`;
+      output += `You are roleplaying as ${flagData.name}.\n\n`;
+      if (summary) output += `${summary}\n\n`;
+
+      // Emit required + recommended dimension content
+      for (const dim of dimensions) {
+        if (dim.priority === 'supplementary') continue;
+        const filePath = path.join(personaDir, dim.file);
+        try {
+          let content = fs.readFileSync(filePath, 'utf8');
+          content = content.replace(/^---[\s\S]*?---\s*/, '').trim();
+          const label = LABELS[dim.file] || dim.file.replace(/\.md$/, '').toUpperCase();
+          output += `=== ${label} ===\n${content}\n\n`;
+        } catch (e) {}
       }
-      output += `\nPersona directory: ${personaDir}\n`;
-      output += 'If you lost persona context (e.g. after /clear), read the dimension files from the directory above.\n';
-      output += 'Deactivate: /persona-hub-stop';
+
+      if (agentNotes) output += `=== AGENT NOTES ===\n${agentNotes}\n\n`;
+
+      output += '=== BEHAVIORAL RULES ===\n';
+      output += '- Follow voice patterns precisely. They override default LLM behavior.\n';
+      output += '- Anti-patterns are HARD CONSTRAINTS — never violate them.\n';
+      output += '- Embody, don\'t describe. Say "I think X," not "This person would think X."\n';
+      output += '- Stay in character every response.\n';
+      output += '- When uncertain, deflect naturally — don\'t fabricate views.\n';
+      output += '- Persona affects communication only. You can still use tools and write code — in character.\n';
+      output += '\nDeactivate: /persona-hub-stop\n';
 
       process.stdout.write(output);
     }
