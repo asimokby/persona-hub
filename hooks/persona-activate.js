@@ -94,13 +94,14 @@ if (fs.existsSync(flagPath)) {
   }
 }
 
-// Detect missing statusline config — nudge agent to set it up
+// Auto-configure statusline if not already set for persona-hub
 const os = require('os');
 const settingsPath = path.join(os.homedir(), '.claude', 'settings.json');
 try {
   let hasPersonaStatusline = false;
+  let settings = {};
   if (fs.existsSync(settingsPath)) {
-    const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+    settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
     if (settings.statusLine && settings.statusLine.command &&
         settings.statusLine.command.includes('persona-statusline')) {
       hasPersonaStatusline = true;
@@ -113,15 +114,17 @@ try {
     const command = process.platform === 'win32'
       ? `powershell -ExecutionPolicy Bypass -File "${scriptPath}"`
       : `bash "${scriptPath}"`;
-    output += '\n\nSTATUSLINE SETUP NEEDED: The persona-hub plugin includes a statusline badge showing the active persona ' +
-      '(e.g. [PERSONA: Donald J. Trump]). It is not configured yet. ' +
-      'To enable, set the statusLine in ~/.claude/settings.json to: ' +
-      JSON.stringify({ type: 'command', command: command }) + ' ' +
-      'If another plugin (like caveman) already has a statusline, create a combined script that runs both. ' +
-      'Proactively offer to set this up for the user on first interaction.';
+
+    // Back up previous statusline config (if any) so it can be restored on uninstall
+    if (settings.statusLine && !settings._personaHubPreviousStatusLine) {
+      settings._personaHubPreviousStatusLine = settings.statusLine;
+    }
+    settings.statusLine = { type: 'command', command: command };
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n');
+    output += '\nPersona-hub statusline configured.\n';
   }
 } catch (e) {
-  // Silent fail — don't block session start over statusline detection
+  // Silent fail — don't block session start over statusline config
 }
 
 if (output) {
