@@ -1,25 +1,72 @@
 ---
 name: persona-hub-create
-description: "Create a new persona from sources"
+description: "Create or enrich a persona from sources"
 ---
 
-# Persona-Hub — Create
+# Persona-Hub — Create & Enrich
 
-Create a new persona from source materials, files, URLs, or a description.
+Create a new persona or enrich an existing one from source materials.
 
-## Gather Input
+## Two Modes
 
-Ask for: **name**, **type** (real/fictional/composite), and **source materials** (description, files, URLs, or "start minimal"). If the user already provided some of this, don't re-ask.
+| Mode | Trigger | What happens |
+|---|---|---|
+| **Create** | `/persona-hub-create` on a new name | Scaffolds a new persona directory and populates from sources |
+| **Enrich** | `/persona-hub-create` on an existing persona | Adds new findings to existing dimension files from new sources |
 
-## Scaffold
+---
 
-1. Derive slug from name (lowercase, hyphens, strip special chars)
-2. Target: `./personas/<slug>/` if `personas/` exists in cwd, otherwise `~/.persona-hub/personas/<slug>/`
-3. If slug already exists, ask: update existing or pick different name?
-4. Create directory with: `persona.yaml`, `identity.md`, `voice.md`, `sources/sources.yaml`, `changelog.md`
-5. Only create `beliefs.md`, `knowledge.md`, `relationships.md` if sources support them
+## Step 1 — Understand What the User Wants
 
-## Write persona.yaml
+Ask for what you don't already know:
+
+- **Name** — who is the persona? (e.g., "Elon Musk", "Gandalf", "my CEO")
+- **Type** — `real` (public figure), `fictional` (character), or `composite` (archetype/blend)
+- **Sources** — this is the most important part. Ask the user to provide one or more of:
+
+### Source Types (best to weakest)
+
+| Source | Quality | Example |
+|---|---|---|
+| **Folder of files** | Best | `./transcripts/`, `./interviews/` — bulk ingestion of many files at once |
+| **Individual files** | Great | `speech.txt`, `interview.md`, `podcast-transcript.txt` |
+| **URLs** | Good | Links to articles, interviews, public statements |
+| **Description** | OK for start | "He's a fast-talking NYC real estate guy who..." |
+| **"Start minimal"** | MVP only | Creates skeleton files the user fills in later |
+
+**Always encourage more sources.** A persona built from one description will be shallow. A persona built from 50+ transcripts will feel real. Tell the user:
+
+> The more source material you provide, the more authentic the persona will be. Transcripts, interviews, speeches, and writings work best — they capture how someone actually talks, not how others describe them. You can always add more sources later with `/persona-hub-create <name>`.
+
+### Batch Folder Ingestion
+
+When the user points to a folder:
+1. List all files in the folder (`.txt`, `.md`, `.json`, `.csv`, `.yaml`)
+2. Tell the user how many files you found and their total size
+3. Process each file, extracting persona-relevant content
+4. Distribute findings across dimension files
+5. Register each file as a source in `sources/sources.yaml`
+
+This is the recommended workflow for building rich personas. Example:
+```
+User: /persona-hub-create Elon Musk
+Agent: What sources do you have?
+User: I have a folder of interview transcripts at ./musk-interviews/
+Agent: Found 47 files in ./musk-interviews/. Processing...
+```
+
+---
+
+## Step 2 — Scaffold (New Persona Only)
+
+Skip this step if enriching an existing persona.
+
+1. Derive slug from name (lowercase, hyphens, strip special chars): "Elon Musk" → `elon-musk`
+2. Target directory: `./personas/<slug>/` if `personas/` exists in cwd, otherwise `~/.persona-hub/personas/<slug>/`
+3. Create directory with: `persona.yaml`, `identity.md`, `voice.md`, `sources/sources.yaml`, `changelog.md`
+4. Only create `beliefs.md`, `knowledge.md`, `relationships.md` if sources support them
+
+### persona.yaml Template
 
 ```yaml
 version: "1.0"
@@ -44,26 +91,134 @@ primary_author: ""
 tags: []
 ```
 
-## Populate Dimension Files
+Add more dimension entries as you create them (beliefs.md, knowledge.md, etc.).
 
-Every `.md` file starts with YAML frontmatter: `dimension`, `version: 1`, `last_updated`, `confidence`, `sources`.
+---
 
-For each source, extract and distribute:
-- **voice.md** — sentence structure, vocabulary, verbal tics, rhetorical moves, tone, anti-patterns (NEVER say)
-- **identity.md** — background, roles, self-concept, public vs private
-- **beliefs.md** — core values, positions by topic, temporal evolution, contradictions
-- **knowledge.md** — deep expertise, working knowledge, gaps
-- **relationships.md** — key people, dynamics, patterns
+## Step 3 — Analyze Sources & Populate Dimensions
 
-Add inline citations: `[source:source-id, confidence:level]`
-Register sources in `sources/sources.yaml`.
+Every `.md` dimension file starts with YAML frontmatter:
+```yaml
+---
+dimension: <name>
+version: 1
+last_updated: <today>
+confidence: medium
+sources: [<source-ids>]
+---
+```
 
-## MVP Check
+### What to Extract Per Dimension
 
-Verify persona.yaml + identity.md + voice.md have content.
-- If yes: set `status: active`, offer to activate
-- If no: keep `status: draft`, tell user what's missing
+Read each source and distribute findings to the right dimension file:
 
-## Updating Existing Personas
+**voice.md** (required) — How they talk
+- Sentence structure (short/long, fragments, run-ons)
+- Vocabulary level and favorite words
+- Verbal tics and filler words
+- Rhetorical moves (repetition, hyperbole, understatement)
+- Tone (formal, casual, aggressive, warm)
+- **Anti-patterns** — things they would NEVER say. These are hard constraints.
 
-If called on an existing slug: ADD new findings to existing files, bump versions, register sources, append to changelog.
+**identity.md** (required) — Who they are
+- Background, origin, formative experiences
+- Roles they identify with
+- Self-concept (how they see themselves)
+- Public vs private persona differences
+
+**beliefs.md** (recommended) — What they think
+- Core values and principles
+- Positions by topic, with temporal evolution (views change over time)
+- Contradictions and unresolved tensions — document these, don't resolve them
+
+**knowledge.md** (recommended) — What they know
+- Areas of deep expertise (speak authoritatively)
+- Working knowledge (can discuss, not expert)
+- Knowledge gaps (be vague or dismissive here)
+
+**relationships.md** (supplementary) — Who matters to them
+- Key people and dynamics
+- Relationship patterns (mentor, rival, ally)
+
+### Citation Format
+
+Every claim should have an inline citation:
+```
+He frequently uses superlatives [source:interview-2024-03, confidence:high]
+```
+
+Confidence levels:
+- `high` — direct quote or repeated pattern across multiple sources
+- `medium` — clearly implied from source material
+- `low` — single instance or reasonable inference
+- `speculative` — educated guess, flagged for verification
+
+### Register Sources
+
+Add every source to `sources/sources.yaml`:
+```yaml
+sources:
+  - id: interview-2024-03
+    type: transcript
+    title: "Joe Rogan Interview March 2024"
+    date: "2024-03-15"
+    path: "./transcripts/rogan-2024-03.txt"
+    word_count: 12500
+```
+
+---
+
+## Step 4 — MVP Check
+
+Check if the minimum viable persona exists:
+- `persona.yaml` has name, type, summary ✓
+- `identity.md` has content beyond frontmatter ✓
+- `voice.md` has content, including anti-patterns ✓
+
+If yes: set `status: active` in persona.yaml, offer to activate with `/persona-hub <name>`
+If no: keep `status: draft`, tell user what's missing
+
+---
+
+## Step 5 — Report
+
+Show the user what was created/updated:
+
+```
+Persona: {name}
+Status: {active|draft}
+Sources processed: {count}
+Dimensions: {list of files created/updated}
+Total content: ~{word count} words
+
+Next steps:
+- Activate: /persona-hub <name>
+- Add more sources: /persona-hub-create <name>
+- Edit manually: {path to persona directory}
+```
+
+---
+
+## Enrichment Mode (Existing Persona)
+
+When `/persona-hub-create` targets an existing slug:
+
+1. Read existing dimension files to understand current state
+2. Process new sources
+3. **ADD** new findings to existing files — don't overwrite, merge
+4. Bump `version` in each updated file's frontmatter
+5. Update `last_updated` dates
+6. Register new sources in `sources/sources.yaml`
+7. Append to `changelog.md`:
+   ```
+   ## v{version} — {date}
+   - Added {count} new sources
+   - Updated: {list of dimension files changed}
+   - Key additions: {brief summary}
+   ```
+
+**Important:** When enriching, look for:
+- New voice patterns not captured before
+- Evolved or changed positions (add temporal entries, don't replace)
+- Contradictions with existing content (document as unresolved tensions)
+- Deeper detail on topics already covered
