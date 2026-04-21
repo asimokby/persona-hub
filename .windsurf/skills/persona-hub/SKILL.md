@@ -1,11 +1,6 @@
 ---
 name: persona-hub
-description: >
-  Manage and activate AI personas. Load structured personality profiles that change
-  how the agent talks, thinks, and behaves. Commands: /persona-hub <name> (activate),
-  /persona-hub list (show available), /persona-hub stop (deactivate),
-  /persona-hub create (build new), /persona-hub help (reference card).
-  Also triggers on "be X", "talk like X", "activate persona", "switch persona".
+description: "AI persona management. Activate personality profiles for your agent."
 ---
 
 # Persona-Hub
