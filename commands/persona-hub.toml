@@ -1,2 +1,2 @@
-description = "Activate a persona by name (e.g. /persona-hub donald-trump)"
+description = "Activate a persona by name"
 prompt = "Follow the /persona-hub skill instructions. User command: /persona-hub {{args}}"

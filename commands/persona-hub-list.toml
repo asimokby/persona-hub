@@ -1,2 +1,2 @@
-description = "Show all available personas (project-local, plugin-bundled, global)"
+description = "Show all available personas"
 prompt = "Follow the /persona-hub skill listing protocol. Scan all persona directories, read each persona.yaml, and display a formatted table of available personas with name, slug, summary, dimension count, and status."
