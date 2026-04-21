@@ -1,0 +1,2 @@
+description = "Update persona-hub to latest version"
+prompt = "Run this exact command to update the persona-hub plugin: git -C ~/.claude/plugins/marketplaces/persona-hub pull origin main. Then tell the user to restart Claude Code for changes to take effect. If the git pull fails, tell them to reinstall: claude plugin uninstall persona-hub@persona-hub && claude plugin install persona-hub@persona-hub"
