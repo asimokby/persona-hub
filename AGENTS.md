@@ -4,9 +4,7 @@ This file helps AI agents discover persona-hub's capabilities.
 
 ## Available Skills
 
-- `skills/persona/SKILL.md` — Main skill: activate, list, and deactivate personas
-- `skills/persona-create/SKILL.md` — Create new personas from sources
-- `skills/persona-help/SKILL.md` — Quick-reference card
+- `skills/persona-hub/SKILL.md` — Main skill: activate, list, deactivate, create personas, and help
 
 ## Key Files
 
@@ -19,7 +17,7 @@ This file helps AI agents discover persona-hub's capabilities.
 
 | Command | Action |
 |---|---|
-| `/persona list` | List available personas |
-| `/persona <name>` | Activate a persona |
-| `/persona stop` | Deactivate current persona |
-| `/persona create` | Create a new persona |
+| `/persona-hub list` | List available personas |
+| `/persona-hub <name>` | Activate a persona |
+| `/persona-hub stop` | Deactivate current persona |
+| `/persona-hub create` | Create a new persona |

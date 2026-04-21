@@ -22,21 +22,21 @@ Install once. Use in every session after that.
 ## Quick Start
 
 ```
-/persona list              # See available personas
-/persona donald-trump      # Activate a persona
-/persona stop              # Deactivate
-/persona create            # Build a new persona
+/persona-hub list              # See available personas
+/persona-hub donald-trump      # Activate a persona
+/persona-hub stop              # Deactivate
+/persona-hub create            # Build a new persona
 ```
 
 ## Commands
 
 | Command | What it does |
 |---------|-------------|
-| `/persona list` | Show available personas |
-| `/persona <name>` | Activate a persona |
-| `/persona stop` | Deactivate current persona |
-| `/persona create` | Create a new persona from files, links, or description |
-| `/persona-help` | Show quick-reference card |
+| `/persona-hub list` | Show available personas |
+| `/persona-hub <name>` | Activate a persona |
+| `/persona-hub stop` | Deactivate current persona |
+| `/persona-hub create` | Create a new persona from files, links, or description |
+| `/persona-hub help` | Show quick-reference card |
 
 ## How It Works
 
@@ -76,7 +76,7 @@ When you activate a persona, the agent reads these files and adopts the persona'
 
 ## Creating a Persona
 
-Run `/persona create` and provide:
+Run `/persona-hub create` and provide:
 - A name and description
 - Source materials: transcripts, articles, URLs, or text
 - The agent analyzes sources and builds dimension files automatically

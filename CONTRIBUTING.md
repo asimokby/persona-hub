@@ -17,9 +17,7 @@ Only edit these — CI auto-syncs everything else:
 
 | File | What it controls |
 |------|-----------------|
-| `skills/persona/SKILL.md` | Main persona skill (activation, listing, deactivation) |
-| `skills/persona-create/SKILL.md` | Persona creation workflow |
-| `skills/persona-help/SKILL.md` | Help reference card |
+| `skills/persona-hub/SKILL.md` | Main persona skill (activation, listing, deactivation, creation, help) |
 | `rules/persona-activate.md` | Auto-activation rule for non-Claude platforms |
 | `hooks/*.js` | Claude Code hook scripts |
 
@@ -42,5 +40,5 @@ Want to add a persona to the bundled examples?
 ## Guidelines
 
 - Small focused changes over big rewrites
-- Test your changes by activating a persona with `/persona <name>`
+- Test your changes by activating a persona with `/persona-hub <name>`
 - Persona content should be sourced and cited, not fabricated

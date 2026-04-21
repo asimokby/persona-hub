@@ -19,7 +19,7 @@ If the file does not exist, do nothing — no persona is active.
 
 ## Deactivation
 
-If the user says `/persona stop`, "stop persona", "normal mode", "be yourself", or "drop the act":
+If the user says `/persona-hub stop`, "stop persona", "normal mode", "be yourself", or "drop the act":
 1. Delete `~/.persona-hub/.active-persona`
 2. Return to normal behavior immediately.
 
@@ -27,7 +27,7 @@ If the user says `/persona stop`, "stop persona", "normal mode", "be yourself", 
 
 | Command | Action |
 |---|---|
-| `/persona list` | List personas from `./personas/` and `~/.persona-hub/personas/` |
-| `/persona <name>` | Activate a persona |
-| `/persona stop` | Deactivate current persona |
-| `/persona create` | Create a new persona |
+| `/persona-hub list` | List personas from `./personas/` and `~/.persona-hub/personas/` |
+| `/persona-hub <name>` | Activate a persona |
+| `/persona-hub stop` | Deactivate current persona |
+| `/persona-hub create` | Create a new persona |

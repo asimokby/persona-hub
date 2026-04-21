@@ -1,6 +1,6 @@
 # Agent Consumption Protocol
 
-> **Note:** This protocol is automatically applied when using the `/persona` skill. This document is the reference specification. See `skills/persona/SKILL.md` for the skill implementation.
+> **Note:** This protocol is automatically applied when using the `/persona-hub` skill. This document is the reference specification. See `skills/persona-hub/SKILL.md` for the skill implementation.
 
 This document defines how an LLM agent should load and use PersonaHub persona files.
 

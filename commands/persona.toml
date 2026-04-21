@@ -1,2 +1,0 @@
-description = "Activate a persona by name"
-prompt = "Activate the persona '{{args}}'. Follow the /persona skill instructions: find the persona directory, read persona.yaml and dimension files, assemble behavior, and adopt the persona. Stay in character from this point forward."

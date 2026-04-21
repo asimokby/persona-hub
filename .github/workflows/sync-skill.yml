@@ -19,12 +19,12 @@ jobs:
       - name: Sync skill files to platform mirrors
         run: |
           # Cursor skill
-          mkdir -p .cursor/skills/persona
-          cp skills/persona/SKILL.md .cursor/skills/persona/SKILL.md
+          mkdir -p .cursor/skills/persona-hub
+          cp skills/persona-hub/SKILL.md .cursor/skills/persona-hub/SKILL.md
 
           # Windsurf skill
-          mkdir -p .windsurf/skills/persona
-          cp skills/persona/SKILL.md .windsurf/skills/persona/SKILL.md
+          mkdir -p .windsurf/skills/persona-hub
+          cp skills/persona-hub/SKILL.md .windsurf/skills/persona-hub/SKILL.md
 
           # Cursor rule (with alwaysApply frontmatter)
           mkdir -p .cursor/rules

@@ -1,0 +1,2 @@
+description = "Manage AI personas: list, activate, stop, create, help"
+prompt = "Follow the /persona-hub skill instructions. User command: /persona-hub {{args}}"

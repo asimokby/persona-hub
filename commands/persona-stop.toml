@@ -1,2 +1,0 @@
-description = "Deactivate the current persona"
-prompt = "Deactivate the current persona. Delete ~/.persona-hub/.active-persona and return to normal agent behavior immediately."

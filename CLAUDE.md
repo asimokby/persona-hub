@@ -7,23 +7,18 @@ This repo is a multi-platform AI agent skill/plugin for managing structured pers
 ```
 persona-hub/
   skills/                         # Skill definitions (SOURCE OF TRUTH)
-    persona/SKILL.md              # Main skill: /persona <name>, list, stop
-    persona-create/SKILL.md       # Creation workflow: /persona create
-    persona-help/SKILL.md         # Quick-reference card
+    persona-hub/SKILL.md           # All-in-one skill: /persona-hub <name>, list, stop, create, help
   .claude-plugin/                 # Claude Code plugin manifest
     plugin.json                   # Hook wiring (SessionStart + UserPromptSubmit)
     marketplace.json              # Marketplace listing
   hooks/                          # Claude Code hooks (Node.js)
     persona-activate.js           # SessionStart: re-inject active persona
-    persona-tracker.js            # UserPromptSubmit: track /persona commands
+    persona-tracker.js            # UserPromptSubmit: track /persona-hub commands
     persona-config.js             # Shared config resolution
     persona-statusline.sh/.ps1    # Statusline badge
     install.sh / uninstall.sh     # Standalone installers
   commands/                       # Slash commands (TOML)
-    persona.toml                  # /persona <name>
-    persona-create.toml           # /persona create
-    persona-list.toml             # /persona list
-    persona-stop.toml             # /persona stop
+    persona-hub.toml              # /persona-hub <subcommand>
   rules/                          # Auto-activation rules (SOURCE OF TRUTH)
     persona-activate.md           # Rule for non-Claude platforms
   personas/                       # Bundled example personas
@@ -36,7 +31,7 @@ persona-hub/
 
 | Source of Truth | Auto-Generated Mirrors |
 |----------------|----------------------|
-| `skills/persona/SKILL.md` | `.cursor/skills/persona/SKILL.md`, `.windsurf/skills/persona/SKILL.md` |
+| `skills/persona-hub/SKILL.md` | `.cursor/skills/persona-hub/SKILL.md`, `.windsurf/skills/persona-hub/SKILL.md` |
 | `rules/persona-activate.md` | `.cursor/rules/persona.mdc`, `.windsurf/rules/persona.md`, `.clinerules/persona.md`, `.github/copilot-instructions.md` |
 
 CI workflow `.github/workflows/sync-skill.yml` syncs source of truth to mirrors on push to main.
@@ -79,7 +74,7 @@ Custom `.md` dimensions can be added — register them in `persona.yaml`.
 
 ## Building a New Persona
 
-Use `/persona create` or manually:
+Use `/persona-hub create` or manually:
 
 1. Copy `templates/` to `personas/<persona-slug>/`
 2. Fill in `persona.yaml` with name, type, summary
@@ -92,6 +87,6 @@ Use `/persona create` or manually:
 
 - **Trump persona:** Complete (v5). Built from 517 transcripts (~3.5M words). ~1,500 lines across 6 dimension files.
 - **Templates:** Complete for all standard file types.
-- **Skills:** 3 skills (persona, persona-create, persona-help)
+- **Skills:** 1 consolidated skill (persona-hub)
 - **Hooks:** SessionStart + UserPromptSubmit for Claude Code
 - **Platform support:** Claude Code, Cursor, Windsurf, Cline, Copilot, OpenClaw, Hermes, Gemini

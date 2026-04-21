@@ -18,8 +18,8 @@ process.stdin.on('end', () => {
 
     // Detect deactivation commands
     const deactivatePatterns = [
-      /^\/persona\s+stop\b/,
-      /^\/persona-stop\b/,
+      /^\/persona-hub\s+stop\b/,
+      /^\/persona-hub:persona-hub\s+stop\b/,
       /\bstop persona\b/,
       /\bdeactivate persona\b/,
       /\bbe yourself\b/,

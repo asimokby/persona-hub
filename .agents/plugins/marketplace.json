@@ -2,8 +2,6 @@
   "name": "persona-hub",
   "description": "AI persona management. Activate structured personality profiles.",
   "skills": [
-    "skills/persona/SKILL.md",
-    "skills/persona-create/SKILL.md",
-    "skills/persona-help/SKILL.md"
+    "skills/persona-hub/SKILL.md"
   ]
 }

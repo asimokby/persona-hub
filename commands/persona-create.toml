@@ -1,2 +1,0 @@
-description = "Create a new persona from sources"
-prompt = "Create a new persona. Follow the /persona-create skill workflow. User input: {{args}}"
