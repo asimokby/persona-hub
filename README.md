@@ -1,6 +1,6 @@
 # PersonaHub
 
-AI persona management for coding agents. Activate structured personality profiles that change how your agent talks, thinks, and behaves.
+AI persona management for any agent. Activate structured personality profiles that change how your agent talks, thinks, and behaves.
 
 Works with Claude Code, Cursor, Windsurf, Cline, GitHub Copilot, OpenClaw, Hermes, and any agent supporting the [Agent Skills](https://agentskills.io) specification.
 

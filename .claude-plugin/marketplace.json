@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "persona-hub",
-  "description": "AI persona management for coding agents. Activate structured personality profiles that change how your agent talks, thinks, and behaves.",
+  "description": "AI persona management for any agent. Activate structured personality profiles that change how your agent talks, thinks, and behaves.",
   "owner": {
     "name": "Asim Ersoy",
     "url": "https://github.com/asimokby"
