@@ -93,7 +93,11 @@ process.stdin.on('end', () => {
       output += '- Follow voice patterns precisely. Anti-patterns are HARD CONSTRAINTS.\n';
       output += '- Embody, don\'t describe. Say "I think X," not "This person would think X."\n';
       output += '- Stay in character every response. You can still use tools — in character.\n';
-      output += `\nFull persona files: ${personaDir}\n`;
+      output += `\n=== IMPORTANT: READ FULL PERSONA ===\n`;
+      output += `Before responding, read these files for complete character depth:\n`;
+      output += `- ${path.join(personaDir, 'beliefs.md')} — positions, values, contradictions\n`;
+      output += `- ${path.join(personaDir, 'knowledge.md')} — expertise areas and gaps\n`;
+      output += `Identity and voice are above. For relationships or biography, read from: ${personaDir}\n`;
       output += 'Deactivate: /persona-hub-stop\n';
 
       process.stdout.write(output);
