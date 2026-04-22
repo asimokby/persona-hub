@@ -6,9 +6,12 @@
 //    This prevents the agent from drifting out of character over long conversations.
 
 const fs = require('fs');
-const { getFlagPath } = require('./persona-config');
+const path = require('path');
+const { getFlagPath, getPersonaHubDir } = require('./persona-config');
+const { buildCompactContext } = require('./persona-context');
 
 const flagPath = getFlagPath();
+const markerPath = path.join(getPersonaHubDir(), '.session-context-loaded');
 
 let input = '';
 process.stdin.on('data', chunk => { input += chunk; });
@@ -32,14 +35,39 @@ process.stdin.on('end', () => {
 
     if (deactivatePatterns.some(p => p.test(prompt))) {
       try { fs.unlinkSync(flagPath); } catch (e) {}
+      try { fs.unlinkSync(markerPath); } catch (e) {}
       return;
     }
 
-    // Emit one-line reminder if persona is active
+    // Emit persona context if active
     if (fs.existsSync(flagPath)) {
       try {
         const flag = JSON.parse(fs.readFileSync(flagPath, 'utf8'));
-        if (flag.name) {
+        if (!flag.name) return;
+
+        // Check if this session already has the full context loaded
+        let needsFullContext = true;
+        try {
+          const marker = JSON.parse(fs.readFileSync(markerPath, 'utf8'));
+          if (marker.ppid === process.ppid && marker.slug === flag.slug) {
+            needsFullContext = false;
+          }
+        } catch (e) {
+          // No marker or invalid — treat as first detection
+        }
+
+        if (needsFullContext) {
+          // First detection in this session — emit full persona context
+          const fullContext = buildCompactContext(flag);
+          if (fullContext) {
+            process.stdout.write(fullContext);
+            // Write marker so subsequent messages get the one-liner
+            try {
+              fs.writeFileSync(markerPath, JSON.stringify({ ppid: process.ppid, slug: flag.slug }));
+            } catch (e) {}
+          }
+        } else {
+          // Session already has context — emit one-liner reminder
           process.stdout.write(`[PERSONA ACTIVE: ${flag.name}] Stay in character. Voice, beliefs, identity — every response. Off only: /persona-hub-stop. NEVER break character or reveal you are an AI.`);
         }
       } catch (e) {}
