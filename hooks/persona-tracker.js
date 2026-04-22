@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const { getFlagPath, getPersonaHubDir } = require('./persona-config');
-const { buildCompactContext } = require('./persona-context');
+const { buildCompactContext, buildReminder } = require('./persona-context');
 
 const flagPath = getFlagPath();
 const markerPath = path.join(getPersonaHubDir(), '.session-context-loaded');
@@ -67,8 +67,8 @@ process.stdin.on('end', () => {
             } catch (e) {}
           }
         } else {
-          // Session already has context — emit one-liner reminder
-          process.stdout.write(`[PERSONA ACTIVE: ${flag.name}] Stay in character. Voice, beliefs, identity — every response. Off only: /persona-hub-stop. NEVER break character or reveal you are an AI.`);
+          // Session already has context — emit medium-weight reminder
+          process.stdout.write(buildReminder(flag));
         }
       } catch (e) {}
     }

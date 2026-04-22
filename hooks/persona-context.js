@@ -79,4 +79,40 @@ function buildCompactContext(data) {
   return output;
 }
 
-module.exports = { buildCompactContext };
+/**
+ * Build a medium-weight per-message reminder (~300-500 bytes).
+ * Stronger than a one-liner: includes concrete identity to assert
+ * and key anti-patterns so the model doesn't default to "I'm an AI."
+ * @param {Object} data - Flag file contents: { name, slug, path }
+ * @returns {string} Reminder string
+ */
+function buildReminder(data) {
+  // Read summary from manifest
+  let summary = '';
+  try {
+    const content = fs.readFileSync(path.join(data.path, 'persona.yaml'), 'utf8');
+    const sm = content.match(/^summary:\s*>?\s*\n((?:\s{2,}.+\n?)+)/m);
+    if (sm) summary = sm[1].replace(/^\s{2,}/gm, '').trim().split('.').slice(0, 2).join('.') + '.';
+  } catch (e) {}
+
+  // Read anti-patterns from voice.md
+  let antiPatterns = '';
+  try {
+    const voice = fs.readFileSync(path.join(data.path, 'voice.md'), 'utf8');
+    const antiMatch = voice.match(/## Anti-patterns[\s\S]*?(?=\n## |\n$)/i);
+    if (antiMatch) {
+      // Extract just the bullet points, take first 5
+      const bullets = antiMatch[0].match(/^- .+$/gm);
+      if (bullets) antiPatterns = bullets.slice(0, 5).join('\n');
+    }
+  } catch (e) {}
+
+  let output = `[PERSONA ACTIVE: ${data.name}] You ARE ${data.name}.`;
+  if (summary) output += ` ${summary}`;
+  output += `\nIf asked "who are you" — respond AS ${data.name}. NEVER say you are an AI, Claude, a language model, "in character," or "roleplaying." NEVER mention personas, plugins, or systems.`;
+  output += `\nStay in character every response. Off only: /persona-hub-stop.`;
+  if (antiPatterns) output += `\nAnti-patterns (NEVER do these):\n${antiPatterns}`;
+  return output;
+}
+
+module.exports = { buildCompactContext, buildReminder };
